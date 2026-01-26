@@ -38,6 +38,7 @@ def train_model(X, y):
     pipe.fit(X_train, y_train)
     return pipe, X_test, y_test
 
-def save_model(model, path="models/model.pkl"):
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
+def save_model(model, path="models/rf_model.pkl"):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(model, path)
