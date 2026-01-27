@@ -22,7 +22,8 @@ Waterfront, view, condition, grade, etc.
 Raw data lives in:
 data/kc_house_data.csv
 
-Project Structure
+## Project Structure
+```text
 housing-price-model/
 │
 ├── data/
@@ -49,6 +50,7 @@ housing-price-model/
 ├── run.py                       # End-to-end experiment runner
 ├── requirements.txt
 └── README.md
+```
 
 Modeling Approach
 1. Data Cleaning
