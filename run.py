@@ -31,7 +31,7 @@ def slugify(name: str) -> str:
 
 
 def safe_json(obj):
-    """Convert non-JSON types (Interval, numpy scalars, etc.) to JSON-friendly types."""
+    # Convert non-JSON types (Interval, numpy scalars, etc.) to JSON-friendly types.
     if isinstance(obj, dict):
         return {str(k): safe_json(v) for k, v in obj.items()}  # force keys to str
     if isinstance(obj, (list, tuple)):
@@ -53,12 +53,12 @@ def format_pct(x: float) -> str:
     return f"{x * 100:.1f}%"
 
 
-def write_human_report(report_path: Path, model_tag: str, metrics: dict) -> None:
-    """
-    Writes a readable markdown report for this run.
-    Expects evaluate() to return keys like:
-      R2_log, MAE_$, RMSE_$, Median_pct_error, Pct_error_quintiles_median
-    """
+def write_report(report_path: Path, model_tag: str, metrics: dict) -> None:
+
+    # Writes a readable markdown report for this run.
+    # Expects evaluate() to return keys like:
+    # R2_log, MAE_$, RMSE_$, Median_pct_error, Pct_error_quintiles_median
+
     r2 = metrics.get("R2_log")
     mae = metrics.get("MAE_$")
     rmse = metrics.get("RMSE_$")
@@ -105,10 +105,8 @@ def write_human_report(report_path: Path, model_tag: str, metrics: dict) -> None
 
 
 def append_master_csv(row: dict) -> None:
-    """
-    Appends a single row to results/experiments.csv (creates it if missing).
-    Handles the 'empty file' case cleanly.
-    """
+    # Appends a single row to results/experiments.csv (creates it if missing).
+    # Handles the 'empty file' case cleanly.
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
     df_new = pd.DataFrame([row])
@@ -161,7 +159,7 @@ def main() -> None:
 
     # Save per-run artifacts
     metrics_path.write_text(json.dumps(metrics_json, indent=2), encoding="utf-8")
-    write_human_report(report_path, model_tag=tag, metrics=metrics_json)
+    write_report(report_path, model_tag=tag, metrics=metrics_json)
 
     # Append master CSV (easy sorting/search)
     row = {
@@ -170,7 +168,7 @@ def main() -> None:
         "tag": tag,
         "model_file": str(model_path),
         "results_dir": str(run_dir),
-        # Flat metrics for quick filtering in CSV:
+        # Flat metrics for quick filtering in CSV
         "R2_log": metrics_json.get("R2_log"),
         "MAE_$": metrics_json.get("MAE_$"),
         "RMSE_$": metrics_json.get("RMSE_$"),
