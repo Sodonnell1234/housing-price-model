@@ -30,7 +30,7 @@ def slugify(name: str) -> str:
 def safe_json(obj):
     # Convert non-JSON types (Interval, numpy scalars, etc.) to JSON-friendly types.
     if isinstance(obj, dict):
-        return {str(k): safe_json(v) for k, v in obj.items()}  # force keys to str
+        return {str(k): safe_json(v) for k, v in obj.items()}  # force keys to string
     if isinstance(obj, (list, tuple)):
         return [safe_json(x) for x in obj]
     try:

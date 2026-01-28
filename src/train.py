@@ -12,10 +12,10 @@ from sklearn.model_selection import KFold, RandomizedSearchCV
 
 
 def build_pipeline(X) -> Pipeline:
-    """
-    Build preprocessing + model pipeline.
-    Keeps your current design: one-hot encode zipcode, passthrough numeric columns.
-    """
+
+    # Build preprocessing + model pipeline.
+    # Keep design: one-hot encode zipcode, passthrough numeric columns.
+
     cat_cols = [c for c in ["zipcode"] if c in X.columns]
     num_cols = [c for c in X.columns if c not in cat_cols]
 
