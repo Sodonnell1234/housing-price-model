@@ -11,7 +11,8 @@ def evaluate(model, X_test, y_test):
 
     mae = mean_absolute_error(true_price, pred_price)
     rmse = np.sqrt(mean_squared_error(true_price, pred_price))
-    r2 = r2_score(y_test, preds)  # in log space, consistent with training target
+    # in log space, consistent with training target
+    r2 = r2_score(y_test, preds)
 
     abs_error = np.abs(pred_price - true_price)
     pct_error = abs_error / true_price
@@ -29,4 +30,5 @@ def evaluate(model, X_test, y_test):
         "MAE_$": float(mae),
         "RMSE_$": float(rmse),
         "Median_pct_error": float(np.median(pct_error)),
-        "Pct_error_quintiles_median": bucket_median_pct.to_dict(),}
+        "Pct_error_quintiles_median": bucket_median_pct.to_dict(),
+    }

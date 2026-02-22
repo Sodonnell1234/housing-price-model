@@ -1,4 +1,4 @@
-# Training models with the engineered features
+# Training the models with the engineered features
 from __future__ import annotations
 
 from pathlib import Path
@@ -13,8 +13,8 @@ from sklearn.model_selection import KFold, RandomizedSearchCV
 
 def build_pipeline(X) -> Pipeline:
 
-    # Build preprocessing + model pipeline.
-    # Keep design: one-hot encode zipcode, passthrough numeric columns.
+    # build preprocessing and the model pipleine
+    # one-hot encode zipcode, pass through numeric columns
 
     cat_cols = [c for c in ["zipcode"] if c in X.columns]
     num_cols = [c for c in X.columns if c not in cat_cols]
@@ -51,9 +51,9 @@ def train_model(
     random_state: int = 42,
 ) -> Tuple[Any, Dict]:
 
-    # Train a model on X_train/y_train.
-    # If tune=True, uses RandomizedSearchCV with K-fold CV on the TRAIN split only.
-    # Returns: (fitted_model, extra_info_dict)
+    # train model on X_train/y_train
+    # if tune = True, uses RandomizedSearchCV with K-fold CV on the TRAIN split only
+    # returns (fitted_model, extra_info_dict)
 
     pipe = build_pipeline(X_train)
 
@@ -67,8 +67,8 @@ def train_model(
         pipe.fit(X_train, y_train)
         return pipe, {"tuned": False}
 
-    # Hyperparameter search (CV inside)
-    # These ranges are reasonable for a first pass without being absurdly slow
+    # hyperparameter search (CV inside)
+    # ranges are good for a first pass without being absurdly slow
     param_distributions = {
         "model__n_estimators": [300, 500, 800, 1200],
         "model__max_depth": [None, 10, 15, 20, 25, 30, 40],
@@ -87,7 +87,8 @@ def train_model(
         cv=cv,
         n_jobs=-1,
         random_state=random_state,
-        refit=True,  # refit best model on all X_train/y_train
+        # refit the best model on all X_train/y_train
+        refit=True,
         verbose=0,
     )
 
@@ -97,7 +98,8 @@ def train_model(
     extra = {
         "tuned": True,
         "cv_folds": cv_folds,
-        "cv_best_score_neg_rmse_log": float(search.best_score_),  # negative RMSE in log-space
+        # negative RMSE in log-space
+        "cv_best_score_neg_rmse_log": float(search.best_score_),
         "best_params": dict(search.best_params_),
     }
     return best_model, extra

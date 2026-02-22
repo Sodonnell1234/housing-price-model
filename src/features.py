@@ -1,4 +1,4 @@
-# Turning raw dataframe into clean matrix
+# turning the raw dataframe into clean matrix
 import pandas as pd
 import numpy as np
 
