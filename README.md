@@ -102,18 +102,6 @@ Median percent error: ~8–9%
 MAE: ~$65k–70k
 Errors increase for the highest-priced homes, consistent with data scarcity and property uniqueness
 
-Why This Structure?
-This project is intentionally split into:
-Exploration (notebooks) for rapid iteration and insight
-Production-style code for reproducibility and clarity
-Experiment tracking for measurable progress
-
-This mirrors real-world ML workflows and makes it easy to:
-Compare models
-Tune hyperparameters responsibly
-Add new features or algorithms
-Resume work without invalidating prior results
-
 Possible Extensions
 Gradient boosting models (XGBoost / LightGBM)
 Feature importance and partial dependence analysis
@@ -125,8 +113,4 @@ Install dependencies with:
 pip install -r requirements.txt
 
 Author
-Built by Sean O'Donnell as a learning and portfolio project focused on:
-Machine learning fundamentals
-Error analysis and validation
-Clean project structure
-Reproducible experimentation
+Built by Sean O'Donnell
