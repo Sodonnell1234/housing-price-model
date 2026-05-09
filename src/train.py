@@ -51,8 +51,7 @@ def train_model(
     random_state: int = 42,
 ) -> Tuple[Any, Dict]:
 
-    # train model on X_train/y_train
-    # if tune = True, uses RandomizedSearchCV with K-fold CV on the TRAIN split only
+    # train model on X_train/y_train, if tune = True, uses RandomizedSearchCV with K-fold CV on the TRAIN split only
     # returns (fitted_model, extra_info_dict)
 
     pipe = build_pipeline(X_train)

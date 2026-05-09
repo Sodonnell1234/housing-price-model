@@ -1,28 +1,21 @@
-Housing Price Prediction Model
+# Housing Price Prediction Model
 
-This project builds and evaluates machine learning models to predict housing prices using the King County Housing dataset.
-I structured it as a reproducible ML experiment pipeline, moving from exploratory analysis to repeatable training, evaluation, and experiment tracking, trying to mimic real-world machine learning workflows rather than one-off notebooks.
+I built this to practice structuring an ML project like an actual experiment rather than a throwaway notebook — tracked runs, held-out test sets, the whole thing. Uses King County housing data from Kaggle.
 
-Project Goals
-Predict home sale prices accurately
-Using methods of handling price skew
-Evaluate errors in log space and dollar space
-Keep track of experiments so improvements are measurable
-Build a project structure suitable for production-style ML workflows
+The goal wasn't just to get a good R² — it was to build something reproducible where I could actually compare model versions and know whether a change helped or hurt.
 
-Dataset
-Source: King County Housing Data from Kaggle
-Each row represents a home sale with features such as:
-Bedrooms, bathrooms
-Square footage (living area, basement)
-Location (zipcode)
-Sale date
-Waterfront, view, condition, grade, etc.
+---
 
-Raw data lives in:
-data/kc_house_data.csv
+## Dataset
 
-Project Structure
+[King County Housing Data](https://www.kaggle.com/datasets/harlfoxem/housesalesprediction) — home sales in King County, WA with features like square footage, location (zipcode), condition, grade, waterfront, and sale date.
+
+Raw data: `data/kc_house_data.csv`
+
+---
+
+## Project Structure
+
 ```
 housing-price-model/
 │
@@ -30,103 +23,69 @@ housing-price-model/
 │   └── kc_house_data.csv
 │
 ├── notebooks/
-│   └── exploration.ipynb        # EDA, feature testing, modeling experiments
+│   └── exploration.ipynb        # EDA, feature testing, early modeling
 │
 ├── src/
 │   ├── features.py              # Data loading, cleaning, feature engineering
-│   ├── train.py                 # Model training + persistence
+│   ├── train.py                 # Model training + saving
 │   ├── evaluate.py              # Metrics and error analysis
-│   └── plots.py                 # (optional) visualization helpers
+│   └── plots.py                 # Visualization helpers
 │
 ├── models/
 │   └── *.pkl                    # Saved trained models
 │
 ├── results/
-│   ├── experiments.csv          # Master experiment log
-│   └── <model_name__timestamp>/ # Per-run results
+│   ├── experiments.csv          # Experiment log across all runs
+│   └── <model_name__timestamp>/
 │       ├── metrics.json
 │       └── report.md
 │
-├── run.py                       # End-to-end experiment runner
+├── run.py                       # End-to-end runner
 ├── requirements.txt
 └── README.md
 ```
 
-Modeling Approach
-1. Data Cleaning
-Removed invalid rows (e.g., zero bedrooms or bathrooms)
-Preserved valid zero values (e.g., basement size, waterfront, view indicators)
+---
 
-2. Feature Engineering
-Extracted sale_year and sale_month from the sale date
-Dropped identifiers (id, raw date)
-Used log(price) as the modeling target to handle skewed price distributions
+## Approach
 
-3. Models Tested
-Linear Regression (baseline)
-Linear Regression with one-hot encoded zipcodes
-Random Forest Regressor (final model)
+Dropped rows with zero bedrooms or bathrooms (bad data). Kept zero values for basement, waterfront, and view
 
-Model Validation & Evaluation
-Data is split once into training and held-out test sets
-Hyperparameters are selected using k-fold cross-validation on the training data only
-Final metrics are reported once on the unseen test set
-This provides a realistic estimate of generalization performance.
+Extracted `sale_year` and `sale_month` from the date column, dropped raw date and ID. Modeled `log(price)` instead of raw price to deal with the right skew in home values.
 
-Metrics Reported
-R² on log(price)
-MAE (Mean Absolute Error) in dollars
-RMSE in dollars
-Median percent error
-Median percent error by price tier
-Evaluating both absolute and relative errors ensures performance across cheap, mid-range, and expensive homes.
+- Linear Regression (baseline)
+- Linear Regression + one-hot encoded zipcodes
+- Random Forest (final)
 
-Running an Experiment
-From the project root:
-python run.py
-You’ll be prompted for a model name:
-Model name (e.g. rf_v1_onehot_zip):
+Hyperparameters tuned with k-fold CV on training data only. Final metrics evaluated once on a held-out test set.
 
-Each run automatically:
-Trains the model
-Saves the trained model to models/
-Logs metrics to results/experiments.csv
-Creates a per-run folder containing:
-metrics.json (machine-readable metrics)
-report.md (human-readable summary)
+---
 
-Example Results
-Typical performance for the tuned Random Forest model:
-R² (log price): ~0.89
-Median percent error: ~8–9%
-MAE: ~$65k–70k
-Errors increase for the highest-priced homes, consistent with data scarcity and property uniqueness
+## Results
 
-Why This Structure?
-This project is intentionally split into:
-Exploration (notebooks) for rapid iteration and insight
-Production-style code for reproducibility and clarity
-Experiment tracking for measurable progress
+Best performance (tuned Random Forest):
 
-This mirrors real-world ML workflows and makes it easy to:
-Compare models
-Tune hyperparameters responsibly
-Add new features or algorithms
-Resume work without invalidating prior results
+| Metric | Value |
+|---|---|
+| R² (log price) | ~0.89 |
+| Median % error | ~8–9% |
+| MAE | ~$65k–70k |
 
-Possible Extensions
-Gradient boosting models (XGBoost / LightGBM)
-Feature importance and partial dependence analysis
-Price-tier–specific models
-Deployment as an API or web application
+Errors are higher at the top end of the price range which is expected since high-end homes are sparse and genuinely harder to predict.
 
-Requirements
-Install dependencies with:
+---
+
+## Running It
+
+```bash
 pip install -r requirements.txt
+python run.py
+```
 
-Author
-Built by Sean O'Donnell as a learning and portfolio project focused on:
-Machine learning fundamentals
-Error analysis and validation
-Clean project structure
-Reproducible experimentation
+You get prompted for a model name (e.g. `rf_v1_onehot_zip`). Each run saves the model, logs metrics to `results/experiments.csv`, and writes a per-run folder with a JSON metrics file and a markdown summary.
+
+---
+
+## Author
+
+Sean O'Donnell
